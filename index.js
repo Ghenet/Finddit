@@ -7,6 +7,10 @@ searchForm.addEventListener('submit', e => {
 
     //Get sort
     const sortBy = document.querySelector('input[name="sortby"]:checked').value;
-    console.log(sortBy);
+
+    //Get limit
+    const searchLimit = document.getElementById('limit').value;
+
+    console.log(searchLimit);
     e.preventDefault();
 })
