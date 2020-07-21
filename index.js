@@ -25,7 +25,10 @@ searchForm.addEventListener('submit', e => {
     searchInput.value = '';
 
     //Search Reddit
-    reddit.search(searchTerm, searchLimit, sortBy);
+    reddit.search(searchTerm, searchLimit, sortBy).then
+        (results => {
+            console.log(results);
+        });
 
     e.preventDefault();
 });
