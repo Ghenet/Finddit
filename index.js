@@ -27,22 +27,26 @@ searchForm.addEventListener('submit', e => {
     //Search Reddit
     reddit.search(searchTerm, searchLimit, sortBy).then
         (results => {
+            console.log(results);
             let output = '<div class="card-columns">'
             //Loop through posts
             results.forEach(post => {
-
                 //check for image
                 const image = post.preview ? post.preview.images[0].source.url :
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQsolgYXZlO9Crj6hBqhEVl2XDJVKw-PU-DxQ&usqp=CAU';
+                    'https://www.affiliatemarketertraining.com/wp-content/uploads/2015/01/Reddit.jpg';
                 output += `
-                <div class="card">
-  <img src="${image}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">${post.title}</h5>
-    <p class="card-text">${truncateText(post.selftext, 250)}</p>
-    <a href="${post.url}" target="_blank" class="btn btn-primary">Read More</a>
-  </div>
-</div>`
+                    <div class="card">
+                        <img src="${image}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${post.title}</h5>
+                            <p class="card-text">${truncateText(post.selftext, 250)}</p>
+                            <a href="${post.url}" target="_blank" class="btn btn-primary">Read More</a>
+                              <hr>
+                              <span class="badge badge-secondary">Subreddit: ${post.subreddit}</span>
+                              <span class="badge badge-dark">Score: ${post.score}</span>
+
+                        </div>
+                    </div>`
             });
             output += '</div>';
 
@@ -57,7 +61,7 @@ function showMessage(message, className) {
     //Create div
     const div = document.createElement('div');
     //Add classes
-    div.className = `alert ${className}`;
+    div.className = `alert ${className} `;
     //Add text
     div.appendChild(document.createTextNode(message));
     //Get parent
