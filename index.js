@@ -30,9 +30,13 @@ searchForm.addEventListener('submit', e => {
             let output = '<div class="card-columns">'
             //Loop through posts
             results.forEach(post => {
+
+                //check for image
+                const image = post.preview ? post.preview.images[0].source.url :
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQsolgYXZlO9Crj6hBqhEVl2XDJVKw-PU-DxQ&usqp=CAU';
                 output += `
                 <div class="card">
-  <img src="..." class="card-img-top" alt="...">
+  <img src="${image}" class="card-img-top" alt="...">
   <div class="card-body">
     <h5 class="card-title">${post.title}</h5>
     <p class="card-text">${truncateText(post.selftext, 250)}</p>
