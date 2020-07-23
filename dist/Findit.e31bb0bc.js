@@ -117,9 +117,94 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"index.js":[function(require,module,exports) {
+})({"redditapi.js":[function(require,module,exports) {
+"use strict";
 
-},{}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  search: function search(searchTerm, searchLimit, sortBy) {
+    return fetch("http://www.reddit.com/search.json?q=".concat(searchTerm, "&sort=").concat(sortBy, "&limit=").concat(searchLimit)).then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      return data.data.children.map(function (data) {
+        return data.data;
+      });
+    }).catch(function (err) {
+      return console.log(err);
+    });
+  }
+};
+exports.default = _default;
+},{}],"index.js":[function(require,module,exports) {
+"use strict";
+
+var _redditapi = _interopRequireDefault(require("./redditapi"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var searchForm = document.getElementById('search-form');
+var searchInput = document.getElementById('search-input'); //Form eventListener
+
+searchForm.addEventListener('submit', function (e) {
+  //Get search term
+  var searchTerm = searchInput.value; //Get sort
+
+  var sortBy = document.querySelector('input[name="sortby"]:checked').value; //Get limit
+
+  var searchLimit = document.getElementById('limit').value; //Check input 
+
+  if (searchTerm === '') {
+    //Show message
+    showMessage('Please add a search term', 'alert-danger');
+  } //Clear search input
+
+
+  searchInput.value = ''; //Search Reddit
+
+  _redditapi.default.search(searchTerm, searchLimit, sortBy).then(function (results) {
+    var output = '<div class="card-columns">'; //Loop through posts
+
+    results.forEach(function (post) {
+      //check for image
+      var image = post.preview ? post.preview.images[0].source.url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQsolgYXZlO9Crj6hBqhEVl2XDJVKw-PU-DxQ&usqp=CAU';
+      output += "\n                <div class=\"card\">\n  <img src=\"".concat(image, "\" class=\"card-img-top\" alt=\"...\">\n  <div class=\"card-body\">\n    <h5 class=\"card-title\">").concat(post.title, "</h5>\n    <p class=\"card-text\">").concat(truncateText(post.selftext, 250), "</p>\n    <a href=\"").concat(post.url, "\" target=\"_blank\" class=\"btn btn-primary\">Read More</a>\n  </div>\n</div>");
+    });
+    output += '</div>';
+    document.getElementById('results').innerHTML = output;
+  });
+
+  e.preventDefault();
+}); //Show message
+
+function showMessage(message, className) {
+  //Create div
+  var div = document.createElement('div'); //Add classes
+
+  div.className = "alert ".concat(className); //Add text
+
+  div.appendChild(document.createTextNode(message)); //Get parent
+
+  var searchContainer = document.getElementById('search-container'); //Get search
+
+  var search = document.getElementById('search'); //Insert message
+
+  searchContainer.insertBefore(div, search); //Timeout alert msg
+
+  setTimeout(function () {
+    return document.querySelector('.alert').remove();
+  }, 3000);
+} //Truncate Text
+
+
+function truncateText(text, limit) {
+  var shortened = text.indexOf(' ', limit);
+  if (shortened == -1) return text;
+  return text.substring(0, shortened);
+}
+},{"./redditapi":"redditapi.js"}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -147,7 +232,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50672" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59771" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
